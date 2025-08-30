@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Document</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .upload-box {
+      background: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    /* form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    } */
+/* Form Container */
+form {
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Labels */
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="file"] {
+  width: 100%;
+  padding: 9px 7px;
+  margin-bottom: 18px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+/* Input Focus Effect */
+input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
+}
+
+/* File Input */
+input[type="file"] {
+  background: #f9f9f9;
+  padding: 7px;
+  cursor: pointer;
+}
+
+/* Upload Button */
+button {
+  width: 100%;
+  padding: 12px;
+  background: #007bff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* Button Hover */
+button:hover {
+  background: #0056b3;
+}
+
+
+    input[type="file"] {
+      border: 1px solid #ddd;
+      padding:9px 7px;
+      border-radius: 10px;
+    }
+
+    button {
+      padding: 14px;
+      background: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #2196F3;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="upload-box">
+    <h2>Upload a New Document</h2>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+
+       <label for="customName">Custom Name (For easy search):</label>
+       <input type="text" name="customName" placeholder="Enter a custom name"><br><br>
+
+      <input type="file" name="document" required>
+      <button type="submit">Upload</button>
+    </form>
+    <a href="/">⬅ Back to Home</a>
+  </div>
+</body>
+</html>

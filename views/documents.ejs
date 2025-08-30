@@ -1,0 +1,13 @@
+<% documents.forEach(doc => { %>
+  <div class="doc-card">
+    <h3><%= doc.customName || doc.originalName %></h3>
+
+    <% if (doc.resourceType === "image") { %>
+      <img src="<%= doc.url %>" alt="<%= doc.originalName %>" class="preview-img"/>
+      <a href="<%= doc.url %>" target="_blank">View Image</a>
+    <% } else { %>
+      <p>📄 <%= doc.originalName %></p>
+      <a href="/documents/<%= doc._id %>/download" class="download-btn">⬇ Download PDF</a>
+    <% } %>
+  </div>
+<% }) %>
