@@ -1,3 +1,4 @@
+ // cloudConfig.js
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
@@ -8,13 +9,23 @@ cloudinary.config({
 });
 
 const storage = new CloudinaryStorage({
-  cloudinary,
+  cloudinary: cloudinary,
   params: async (req, file) => {
-    const resource_type = file.mimetype.startsWith("image/") ? "image" : "raw";
+    const timestamp = Date.now();
+    const filename = file.originalname.replace(/\.[^/.]+$/, "");
+    const publicId = `${timestamp}-${filename}`;
+
+    // Decide resource_type based on MIME
+    let resourceType = "raw";
+    if (file.mimetype.startsWith("image/")) {
+      resourceType = "image";
+    }
+
     return {
       folder: "medicalDocuments",
-      resource_type: resource_type,
-      public_id: Date.now() + "-" + file.originalname,
+      resource_type: resourceType,  // 👈 force correct type
+      public_id: publicId,
+      allowed_formats: ["jpg", "jpeg", "png", "gif", "pdf", "doc", "docx", "txt"],
     };
   },
 });

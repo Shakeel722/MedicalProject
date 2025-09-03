@@ -14,18 +14,23 @@ const documentSchema = new mongoose.Schema({
     type: String,
     required: true    // Original name of the file uploaded by user
   },
-
   customName: {
     type: String,
     required: false
   },
-
-    resourceType: {     // to identify images with pdf,docs 
+  resourceType: {     // to identify images with pdf,docs 
     type: String,
-    enum: ["image", "raw"],  // Cloudinary resource type
+    enum: ["image", "raw" , "auto"],  // Cloudinary resource type
     default: "raw"
   },
-
+  fileSize: {
+    type: Number,
+    required: false   // File size in bytes
+  },
+  mimeType: {
+    type: String,
+    required: false   // MIME type (e.g., application/pdf, image/jpeg)
+  },
   uploadedAt: { 
     type: Date, 
     default: Date.now // Auto-set upload date

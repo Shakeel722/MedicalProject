@@ -1,13 +1,436 @@
-<% documents.forEach(doc => { %>
-  <div class="doc-card">
-    <h3><%= doc.customName || doc.originalName %></h3>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-    <% if (doc.resourceType === "image") { %>
-      <img src="<%= doc.url %>" alt="<%= doc.originalName %>" class="preview-img"/>
-      <a href="<%= doc.url %>" target="_blank">View Image</a>
+    body {
+      background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .search-bar {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .search-form {
+      display: flex;
+      gap: 10px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .search-btn {
+      padding: 12px 20px;
+      background: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .search-btn:hover {
+      background: #1976D2;
+    }
+
+    .documents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .doc-card {
+      background: #f9f9f9;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .doc-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .doc-header {
+      margin-bottom: 15px;
+    }
+
+    .doc-header h3 {
+      color: #333;
+      margin-bottom: 5px;
+      word-break: break-word;
+    }
+
+    .doc-meta {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .preview-container {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .preview-img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .pdf-info {
+      text-align: center;
+      padding: 20px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .pdf-info p {
+      margin-bottom: 5px;
+      color: #666;
+    }
+
+    .pdf-icon {
+      font-size: 4rem;
+      color: #dc3545;
+      margin-bottom: 10px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.3s ease;
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .btn-primary {
+      background: #2196F3;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1976D2;
+    }
+
+    .btn-success {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #45a049;
+    }
+
+    .btn-danger {
+      background: #f44336;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #d32f2f;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background: #6c757d;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .back-btn:hover {
+      background: #5a6268;
+    }
+
+    .no-documents {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .upload-link {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 24px;
+      background: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .upload-link:hover {
+      background: #45a049;
+    }
+
+    /* Flash messages */
+    .flash {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+      z-index: 1000;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .flash.success { background: #4CAF50; }
+    .flash.error { background: #f44336; }
+    .flash.hide { opacity: 0; }
+
+    /* Mobile Responsive */
+   /* Existing mobile responsive */
+@media (max-width: 768px) {
+  .documents-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .search-form {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .search-input,
+  .search-btn {
+    width: 100%;
+  }
+  
+  .actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .actions .btn {
+    width: 100%;
+  }
+  
+  .doc-card {
+    padding: 15px;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Extra small devices (phones under 480px) */
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+  
+  .container {
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 1.2rem;
+  }
+  
+  .doc-header h3 {
+    font-size: 1rem;
+  }
+  
+  .search-input {
+    font-size: 14px;
+    padding: 10px;
+  }
+  
+  .search-btn {
+    font-size: 14px;
+    padding: 10px;
+  }
+  
+  .btn {
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+  
+  .preview-img {
+    max-height: 150px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <!-- Flash Messages -->
+  <% if (success && success.length > 0) { %>
+    <div id="flash-message" class="flash success"><%= success %></div>
+  <% } %>
+  <% if (error && error.length > 0) { %>
+    <div id="flash-message" class="flash error"><%= error %></div>
+  <% } %>
+
+  <div class="container">
+    <a href="/" class="back-btn">⬅ Back to Home</a>
+    
+    <div class="header">
+      <h1><%= title %></h1>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <form action="/documents" method="GET" class="search-form">
+        <input 
+          type="text" 
+          name="q" 
+          placeholder="Search documents..." 
+          value="<%= searchQuery %>"
+          class="search-input"
+        >
+        <button type="submit" class="search-btn">🔍 Search</button>
+      </form>
+      <% if (searchQuery) { %>
+        <p style="margin-top: 10px; color: #666;">
+          Search results for: "<%= searchQuery %>" 
+          <a href="/documents" style="color: #2196F3; margin-left: 10px;">Clear</a>
+        </p>
+      <% } %>
+    </div>
+
+    <!-- Documents Grid -->
+    <% if (documents && documents.length > 0) { %>
+      <div class="documents-grid">
+        <% documents.forEach(doc => { %>
+          <div class="doc-card">
+            <div class="doc-header">
+              <h3><%= doc.customName || doc.originalName %></h3>
+              <div class="doc-meta">
+                Uploaded: <%= new Date(doc.uploadedAt).toLocaleDateString() %>
+                <% if (doc.customName && doc.customName !== doc.originalName) { %>
+                  <br>Original: <%= doc.originalName %>
+                <% } %>
+              </div>
+            </div>
+
+            <div class="preview-container">
+  <% if (doc.mimeType && doc.mimeType.startsWith("image/")) { %>
+    <!-- Actual images -->
+    <img src="<%= doc.url %>" alt="<%= doc.originalName %>" class="preview-img"/>
+  <% } else { %>
+    <!-- PDFs and other documents -->
+    <div class="pdf-icon">📄</div>
+    <div class="pdf-info">
+      <p><strong><%= doc.originalName %></strong></p>
+      <p>Click "View PDF" to open in new tab</p>
+    </div>
+  <% } %>
+</div>
+
+
+<!-- Replace the actions section in your documents.ejs with this updated version -->
+<div class="actions">
+  <% if (doc.mimeType && doc.mimeType.startsWith("image/")) { %>
+  <!-- Images -->
+  <a href="<%= doc.url %>" target="_blank" class="btn btn-primary">View Image</a>
+  <a href="<%= doc.url.replace('/upload/', '/upload/fl_attachment/') %>" class="btn btn-success">Download</a>
+<% } else { %>
+  <!-- PDFs and other files -->
+  <a href="/documents/<%= doc._id %>/download" target="_blank" class="btn btn-success" style="flex: 2;">Download pdf</a>
+<% } %>
+
+  
+  <form action="/documents/<%= doc._id %>?_method=DELETE" method="POST" style="flex: 1;" 
+        onsubmit="return confirm('Are you sure you want to delete this document?')">
+    <button type="submit" class="btn btn-danger" style="width: 100%;">Delete</button>
+  </form>
+</div>
+
+
+
+          
+          </div>
+        <% }) %>
+      </div>
     <% } else { %>
-      <p>📄 <%= doc.originalName %></p>
-      <a href="/documents/<%= doc._id %>/download" class="download-btn">⬇ Download PDF</a>
+      <div class="no-documents">
+        <h3>No documents found</h3>
+        <% if (searchQuery) { %>
+          <p>No documents match your search "<%= searchQuery %>"</p>
+          <a href="/documents">View all documents</a>
+        <% } else { %>
+          <p>You haven't uploaded any documents yet.</p>
+          <a href="/upload" class="upload-link">📤 Upload Your First Document</a>
+        <% } %>
+      </div>
     <% } %>
   </div>
-<% }) %>
+
+  <script>
+    // Auto dismiss flash message
+    setTimeout(() => {
+      const msg = document.getElementById("flash-message");
+      if (msg) {
+        msg.classList.add("hide");
+        setTimeout(() => msg.remove(), 600);
+      }
+    }, 3000);
+  </script>
+</body>
+</html>

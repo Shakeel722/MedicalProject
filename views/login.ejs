@@ -1,0 +1,147 @@
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      margin: 0;
+      background: #f4f6f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    input:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.85rem;
+      margin-top: 5px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      background: #007bff;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .toggle-password {
+      margin-top: 8px;
+      background: none;
+      border: none;
+      color: #007bff;
+      font-size: 0.9rem;
+      cursor: pointer;
+      align-self: flex-start;
+      padding: 0;
+    }
+
+    .toggle-password:hover {
+      text-decoration: underline;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 15px;
+      }
+
+      input, button {
+        font-size: 0.95rem;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Login</h2>
+    <form action="/login" method="POST">
+      
+      <label for="username">Username:</label>
+      <input type="text" name="username" id="username" required autofocus>
+      <% if (usernameError && usernameError.length > 0) { %>
+        <p class="error"><%= usernameError[0] %></p>
+      <% } %>
+
+      <label for="password">Password:</label>
+      <input type="password" name="password" id="password" required>
+      <% if (passwordError && passwordError.length > 0) { %>
+        <p class="error"><%= passwordError[0] %></p>
+      <% } %>
+
+      <button type="button" class="toggle-password" onclick="togglePassword()">👁 Show Password</button>
+
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <script>
+    function togglePassword() {
+      const passwordField = document.getElementById("password");
+      const toggleBtn = document.querySelector(".toggle-password");
+
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        toggleBtn.textContent = "🙈 Hide Password";
+      } else {
+        passwordField.type = "password";
+        toggleBtn.textContent = "👁 Show Password";
+      }
+    }
+  </script>
+</body>
+</html>
